@@ -1,0 +1,55 @@
+<!-- templates/category_form.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Selection</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Select a Category</h1>
+
+    <label for="category">Category:</label>
+    <select id="category">
+        <option value="">-- Select a Category --</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="subcategory">Subcategory:</label>
+    <select id="subcategory">
+        <option value="">-- Select a Subcategory --</option>
+    </select>
+
+    <script>
+        $(document).ready(function () {
+            $('#category').change(function () {
+                var categoryId = $(this).val();
+                $('#subcategory').empty().append('<option value="">-- Loading... --</option>');
+                if (categoryId) {
+                    $.ajax({
+                        url: "{% url 'get_subcategories' %}",
+                        data: {
+                            'category_id': categoryId
+                        },
+                        success: function (data) {
+                            $('#subcategory').empty().append('<option value="">-- Select a Subcategory --</option>');
+                            $.each(data, function (index, subcategory) {
+                                $('#subcategory').append('<option value="' + subcategory.id + '">' + subcategory.name + '</option>');
+                            });
+                        },
+                        error: function () {
+                            alert('An error occurred while fetching subcategories.');
+                        }
+                    });
+                } else {
+                    $('#subcategory').empty().append('<option value="">-- Select a Subcategory --</option>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

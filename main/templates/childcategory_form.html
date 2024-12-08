@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    
+        /* Body Styles */
+        body {
+            font-family: 'Arial', sans-serif; /* Basic sans-serif font */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f4f4f4; /* Light background for body */
+            color: #333; /* Default text color */
+        }
+    
+        /* Navbar Styles */
+        nav {
+            background-color: #2c3e50; /* Dark color for the navbar */
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+    
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+    
+        nav a:hover {
+            color: #1abc9c; /* Accent color on hover */
+            text-decoration: underline;
+        }
+    
+        /* Layout container for sidebar and main content */
+        .container {
+            display: flex;
+            flex-grow: 1;
+            gap: 20px;
+            padding: 20px;
+        }
+    
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #413d3d; /* Darker sidebar background */
+            color: white;
+            width: 250px;
+            padding: 20px;
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for sidebar */
+        }
+    
+        .sidebar a {
+            display: block;
+            margin: 15px 0;
+            color: #ccc; /* Light gray color for links */
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease-in-out;
+        }
+    
+        .sidebar a:hover {
+            color: #3498db; /* Bright blue color on hover */
+        }
+    
+        /* Main content area styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Subtle shadow around content */
+        }
+    
+        .main-content h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+    
+        .main-content p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+        }
+    
+        /* Aside Section (Right Sidebar) */
+        aside {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background-color: rgb(85, 82, 82); /* Lighter background for aside */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+            width: 20%;
+        }
+    
+        aside a {
+            margin: 12px 0;
+            color: #ccc; /* Light gray for links */
+            font-size: 16px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+    
+        aside a:hover {
+            color: #1abc9c; /* Green color on hover */
+        }
+    
+        /* Footer Styles */
+        footer {
+            background-color: #2c3e50; /* Same dark color for the footer */
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Light shadow at bottom */
+        }
+    
+        footer p {
+            margin: 0;
+        }
+    
+        /* Form Styling */
+        form {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            background-color: #fff; /* White background for form */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for form */
+        }
+    
+        form input, form select, form textarea {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ddd; /* Border for form elements */
+            margin-top: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+    
+        form input:focus, form select:focus, form textarea:focus {
+            border-color: #3498db; /* Blue border on focus */
+        }
+    
+        form button {
+            padding: 12px 20px;
+            background-color: #3498db; /* Button color */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    
+        form button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+    </style>
+</head>  
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+         
+    </nav>
+
+    <!-- Layout Container with Sidebar and Main Content -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside>
+            <a href="{% url 'category_list' %}">Category</a>
+            <a href="{% url 'subcategory_list' %}">Sub-category</a>
+            <a href="{% url 'childcategory_list' %}">Child-Category</a>
+        </aside>
+
+        <div style="margin-top: 60px;display: flex; flex-direction: column; align-items: center; margin-left: 300px;">
+            <h1>Sub-Category Form</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+   <!-- Footer -->
+   <footer>
+       <p>© 2024 Your Website. All rights reserved.</p>
+   </footer>
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#id_category').on('change', function () {
+            const categoryId = $(this).val();
+            const subcategorySelect = $('#id_subcategory');
+            subcategorySelect.empty();
+
+            if (categoryId) {
+                $.ajax({
+                    url: "{% url 'fetch_subcategories' %}",
+                    data: { category_id: categoryId },
+                    success: function (data) {
+                        subcategorySelect.append('<option value="">Select Subcategory</option>');
+                        data.forEach(function (sub) {
+                            subcategorySelect.append(`<option value="${sub.id}">${sub.name}</option>`);
+                        });
+                    }
+                });
+            } else {
+                subcategorySelect.append('<option value="">Select Subcategory</option>');
+            }
+        });
+    });
+</script>

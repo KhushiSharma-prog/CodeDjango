@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+
+<body>
+    <section class="mainscreen"
+        style="background-image: url(/static/images/bg2.jpg);height: 600px;background-repeat: no-repeat; background-size: cover;">
+        <div class="container">
+
+            <div class="heading">
+                <h3>Login</h3>
+            </div>
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="inputs">
+                    <input type="text" name="email" placeholder="Email ID">
+                    <input type="text" name="password" placeholder="Password">
+                </div>
+
+                <div class="links">
+                    <div style="display: flex; gap: 5px;"><input type="checkbox">
+                        <p> Remember me</p></input>
+                    </div>
+                    <a href="#">Forget Password?</a>
+                </div>
+
+                <div class="buttons">
+                    <button>Login</button>
+                </div>
+            </form>
+            <div class="pera">
+                <p style="color: wheat;">Don't have an account? <a style="color: white;" href="#"> Register</a></p>
+            </div>
+        </div>
+
+    </section>
+</body>
+
+</html>
