@@ -192,4 +192,61 @@
 
 </body>
 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Subcategory selection based on Category
+        $('#id_category').on('change', function () {
+            const categoryId = $(this).val();
+            const subcategorySelect = $('#id_subcategory');
+            const childCategorySelect = $('#id_childcategory');
+            subcategorySelect.empty();
+            childCategorySelect.empty(); // Clear child category as well
+
+            if (categoryId) {
+                $.ajax({
+                    url: "{% url 'fetch_subcategories' %}",
+                    data: { category_id: categoryId },
+                    success: function (data) {
+                        subcategorySelect.append('<option value="">Select Subcategory</option>');
+                        data.forEach(function (sub) {
+                            subcategorySelect.append(`<option value="${sub.id}">${sub.name}</option>`);
+                        });
+                    }
+                });
+            } else {
+                subcategorySelect.append('<option value="">Select Subcategory</option>');
+                childCategorySelect.append('<option value="">Select Child Category</option>');
+            }
+        });
+
+        // Child category selection based on Subcategory
+        $('#id_subcategory').on('change', function () {
+            const subcategoryId = $(this).val();
+            const childCategorySelect = $('#id_childcategory');
+            childCategorySelect.empty();
+
+            if (subcategoryId) {
+                $.ajax({
+                    url: "{% url 'fetch_childcategories' %}",
+                    data: { subcategory_id: subcategoryId },
+                    success: function (data) {
+                        childCategorySelect.append('<option value="">Select Child Category</option>');
+                        data.forEach(function (child) {
+                            childCategorySelect.append(`<option value="${child.id}">${child.name}</option>`);
+                        });
+                    }
+                });
+            } else {
+                childCategorySelect.append('<option value="">Select Child Category</option>');
+            }
+        });
+    });
+</script>
+
+
+
+
+
 </html>

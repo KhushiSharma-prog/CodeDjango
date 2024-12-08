@@ -27,8 +27,8 @@ class ProductCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     childcategory = models.ForeignKey(ChildCategory, on_delete=models.CASCADE)
-    price = models.IntegerField()
-    quantity = models.IntegerField()
+    price = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField()
     image = models.ImageField(upload_to='images/')
     description = models.CharField(blank=True, null=True)
 

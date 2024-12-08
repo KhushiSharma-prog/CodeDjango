@@ -26,6 +26,7 @@ urlpatterns = [
     path('products/update/<int:pk>/', views.productcategory_update, name='productcategory_update'),
     path('products/delete/<int:pk>/', views.productcategory_delete, name='productcategory_delete'),
     path('fetch-subcategories/', views.fetch_subcategories, name='fetch_subcategories'),
-    path('upload/', views.product_create, name='product_create'),
+    path('fetch_childcategories/',views.fetch_childcategories,name='fetch_childcategories'),
+    path('my_view/', views.product_create, name='product_create'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

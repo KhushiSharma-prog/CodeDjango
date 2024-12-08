@@ -5,6 +5,10 @@ from .forms import CategoryForm, SubcategoryForm, ChildCategoryForm, ProductCate
 from .models import DBdata
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from .forms import MyModelForm
+from .models import MyModel
+
+
 
 
 def category_list(request):
@@ -121,5 +125,23 @@ def fetch_subcategories(request):
     print(category_id)
     subcategories = Subcategory.objects.filter(category_id=category_id).values('id', 'name')
     return JsonResponse(list(subcategories), safe=False)
+
+def fetch_childcategories(request):
+    subcategory_id = request.GET.get('subcategory_id')
+    child_categories = ChildCategory.objects.filter(subcategory_id=subcategory_id).values('id', 'name')
+    return JsonResponse(list(child_categories), safe=False)
+
+
+def add_image(request):
+    if request.method == 'POST':
+        form = MyModelForm(request.POST, request.FILES)  # Handle image files
+        if form.is_valid():
+            form.save()  # Save the form to the database
+            return redirect('product_list')  # Redirect to a success page or list page
+    else:
+        form = MyModelForm()
+
+    return render(request, 'product.html', {'form': form})
+
 
 
