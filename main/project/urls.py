@@ -23,10 +23,12 @@ urlpatterns = [
 
     path('products/', views.product_list, name='product_list'),
     path('products/create/', views.product_create, name='product_create'),
-    path('products/update/<int:pk>/', views.productcategory_update, name='productcategory_update'),
+    path('products/update/<int:pk>/', views.product_update, name='product_update'),
     path('products/delete/<int:pk>/', views.productcategory_delete, name='productcategory_delete'),
     path('fetch-subcategories/', views.fetch_subcategories, name='fetch_subcategories'),
     path('fetch_childcategories/',views.fetch_childcategories,name='fetch_childcategories'),
+    path('toggle_product_status/', views.toggle_product_status, name='toggle_product_status'),
+
 # ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ]
 if settings.DEBUG:

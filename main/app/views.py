@@ -130,7 +130,7 @@ def product_create(request):
 
     return render(request, 'product.html', {'form': form})
  
-def productcategory_update(request, pk):
+def product_update(request, pk):
 
     product_category = get_object_or_404(ProductCategory, pk=pk)
 
@@ -164,6 +164,21 @@ def fetch_childcategories(request):
     return JsonResponse(list(child_categories), safe=False)
 
 
+def toggle_product_status(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')  # Get product ID from the POST data
+        current_status = request.POST.get('current_status') == 'true'  # Convert string to boolean
+
+        product = get_object_or_404(ProductCategory, id=product_id)
+
+        # Toggle the status (if it's active, make it inactive, and vice versa)
+        new_status = not current_status
+        product.is_active = new_status
+        product.save()
+
+        return JsonResponse({'success': True, 'new_status': new_status})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
 

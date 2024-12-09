@@ -31,6 +31,8 @@ class ProductCategory(models.Model):
     quantity = models.PositiveIntegerField()
     image = models.ImageField(upload_to='images/')
     description = models.CharField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)  # Active or inactive status
+
 
     def __str__(self):
         return self.name
