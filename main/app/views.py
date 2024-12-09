@@ -5,6 +5,14 @@ from .forms import CategoryForm, SubcategoryForm, ChildCategoryForm, ProductCate
 from .models import DBdata
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+from .models import ProductCategory
+from .serializers import ProductCategorySerializer
+
 
 
 
@@ -96,61 +104,87 @@ def product_list(request):
     return render(request, 'product_list.html', {'productcategories': productcategories})
 
 # def product_create(request):
-    
-#     # form = ProductCategoryForm(request.POST or None)
-#     form = ProductCategoryForm(request.POST, request.FILES)  # Include `request.FILES` for file uploads
-#     if form.is_valid():
-#         form.save()
-#         return redirect('product_list')
+
+#     if request.method == 'POST':
+
+#         form = ProductCategoryForm(request.POST, request.FILES)
+
+#         if form.is_valid():
+
+#             form.save()
+
+#             return redirect('product_list')
+
+#     else:
+
+#         form = ProductCategoryForm()
+
 #     return render(request, 'product.html', {'form': form})
-
-# def productcategory_update(request, pk):
-#     productcategory = get_object_or_404(ProductCategory, pk=pk)
-#     form = ProductCategoryForm(request.POST or None, instance=productcategory)
-#     if form.is_valid():
-#         form.save()
-#         return redirect('product_list')
-#     return render(request, 'product.html', {'form': form})
-
-def product_create(request):
-
-    if request.method == 'POST':
-
-        form = ProductCategoryForm(request.POST, request.FILES)
-
-        if form.is_valid():
-
-            form.save()
-
-            return redirect('product_list')
-
-    else:
-
-        form = ProductCategoryForm()
-
-    return render(request, 'product.html', {'form': form})
  
-def product_update(request, pk):
+# def product_update(request, pk):
 
+#     product_category = get_object_or_404(ProductCategory, pk=pk)
+
+#     form = ProductCategoryForm(request.POST or None, request.FILES or None, instance=product_category)
+
+#     if form.is_valid():
+
+#         form.save()
+
+#         return redirect('product_list')
+
+#     return render(request, 'product.html', {'form': form})
+
+
+# def productcategory_delete(request, pk):
+#     productcategory = get_object_or_404(ProductCategory, pk=pk)
+#     if request.method == 'POST':
+#         productcategory.delete()
+#         return redirect('product_list')
+#     return render(request, 'product_confirm_delete.html', {'productcategory': productcategory})
+
+# List API View
+# @api_view(['GET'])
+# def product_list(request):
+#     """ Retrieve a list of all product categories """
+#     productcategories = ProductCategory.objects.all()
+#     serializer = ProductCategorySerializer(productcategories, many=True)
+#     return Response(serializer.data)
+
+# Create API View
+@api_view(['POST'])
+def product_create(request):
+    """ Create a new product category """
+    if request.method == 'POST':
+        serializer = ProductCategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Update API View
+@api_view(['PUT'])
+def product_update(request, pk):
+    """ Update an existing product category """
     product_category = get_object_or_404(ProductCategory, pk=pk)
 
-    form = ProductCategoryForm(request.POST or None, request.FILES or None, instance=product_category)
+    if request.method == 'PUT':
+        serializer = ProductCategorySerializer(product_category, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    if form.is_valid():
+# Delete API View
+@api_view(['DELETE'])
+def product_delete(request, pk):
+    """ Delete a product category """
+    product_category = get_object_or_404(ProductCategory, pk=pk)
+    
+    if request.method == 'DELETE':
+        product_category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-        form.save()
-
-        return redirect('product_list')
-
-    return render(request, 'product.html', {'form': form})
-
-
-def productcategory_delete(request, pk):
-    productcategory = get_object_or_404(ProductCategory, pk=pk)
-    if request.method == 'POST':
-        productcategory.delete()
-        return redirect('product_list')
-    return render(request, 'product_confirm_delete.html', {'productcategory': productcategory})
 
 def fetch_subcategories(request):
     category_id = request.GET.get('category_id')

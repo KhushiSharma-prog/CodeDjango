@@ -21,10 +21,17 @@ urlpatterns = [
     path('childcategories/delete/<int:pk>/', views.childcategory_delete, name='childcategory_delete'),
 
 
-    path('products/', views.product_list, name='product_list'),
-    path('products/create/', views.product_create, name='product_create'),
-    path('products/update/<int:pk>/', views.product_update, name='product_update'),
-    path('products/delete/<int:pk>/', views.productcategory_delete, name='productcategory_delete'),
+    # path('products/', views.product_list, name='product_list'),
+    # path('products/create/', views.product_create, name='product_create'),
+    # path('products/update/<int:pk>/', views.product_update, name='product_update'),
+    # path('products/delete/<int:pk>/', views.productcategory_delete, name='productcategory_delete'),
+    
+    # path('', include('products.urls')),  # Include the 'products' app URLs
+    path('api/productcategories/', views.product_list, name='product_list'),
+    path('api/productcategories/create/', views.product_create, name='product_create'),
+    path('api/productcategories/<int:pk>/update/', views.product_update, name='product_update'),
+    path('api/productcategories/<int:pk>/delete/', views.product_delete, name='product_delete'),
+
     path('fetch-subcategories/', views.fetch_subcategories, name='fetch_subcategories'),
     path('fetch_childcategories/',views.fetch_childcategories,name='fetch_childcategories'),
     path('toggle_product_status/', views.toggle_product_status, name='toggle_product_status'),
