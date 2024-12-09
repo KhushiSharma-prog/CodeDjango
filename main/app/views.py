@@ -5,8 +5,7 @@ from .forms import CategoryForm, SubcategoryForm, ChildCategoryForm, ProductCate
 from .models import DBdata
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from .forms import MyModelForm
-from .models import MyModel
+
 
 
 
@@ -96,22 +95,55 @@ def product_list(request):
     productcategories = ProductCategory.objects.select_related('category', 'subcategory', 'childcategory')
     return render(request, 'product_list.html', {'productcategories': productcategories})
 
-def product_create(request):
+# def product_create(request):
     
-    # form = ProductCategoryForm(request.POST or None)
-    form = ProductCategoryForm(request.POST, request.FILES)  # Include `request.FILES` for file uploads
+#     # form = ProductCategoryForm(request.POST or None)
+#     form = ProductCategoryForm(request.POST, request.FILES)  # Include `request.FILES` for file uploads
+#     if form.is_valid():
+#         form.save()
+#         return redirect('product_list')
+#     return render(request, 'product.html', {'form': form})
+
+# def productcategory_update(request, pk):
+#     productcategory = get_object_or_404(ProductCategory, pk=pk)
+#     form = ProductCategoryForm(request.POST or None, instance=productcategory)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('product_list')
+#     return render(request, 'product.html', {'form': form})
+
+def product_create(request):
+
+    if request.method == 'POST':
+
+        form = ProductCategoryForm(request.POST, request.FILES)
+
+        if form.is_valid():
+
+            form.save()
+
+            return redirect('product_list')
+
+    else:
+
+        form = ProductCategoryForm()
+
+    return render(request, 'product.html', {'form': form})
+ 
+def productcategory_update(request, pk):
+
+    product_category = get_object_or_404(ProductCategory, pk=pk)
+
+    form = ProductCategoryForm(request.POST or None, request.FILES or None, instance=product_category)
+
     if form.is_valid():
+
         form.save()
+
         return redirect('product_list')
+
     return render(request, 'product.html', {'form': form})
 
-def productcategory_update(request, pk):
-    productcategory = get_object_or_404(ProductCategory, pk=pk)
-    form = ProductCategoryForm(request.POST or None, instance=productcategory)
-    if form.is_valid():
-        form.save()
-        return redirect('product_list')
-    return render(request, 'product.html', {'form': form})
 
 def productcategory_delete(request, pk):
     productcategory = get_object_or_404(ProductCategory, pk=pk)
@@ -132,16 +164,6 @@ def fetch_childcategories(request):
     return JsonResponse(list(child_categories), safe=False)
 
 
-def add_image(request):
-    if request.method == 'POST':
-        form = MyModelForm(request.POST, request.FILES)  # Handle image files
-        if form.is_valid():
-            form.save()  # Save the form to the database
-            return redirect('product_list')  # Redirect to a success page or list page
-    else:
-        form = MyModelForm()
-
-    return render(request, 'product.html', {'form': form})
 
 
 

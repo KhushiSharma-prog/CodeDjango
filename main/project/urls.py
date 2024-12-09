@@ -27,6 +27,7 @@ urlpatterns = [
     path('products/delete/<int:pk>/', views.productcategory_delete, name='productcategory_delete'),
     path('fetch-subcategories/', views.fetch_subcategories, name='fetch_subcategories'),
     path('fetch_childcategories/',views.fetch_childcategories,name='fetch_childcategories'),
-    path('my_view/', views.product_create, name='product_create'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+# ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
