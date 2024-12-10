@@ -2,10 +2,12 @@ from django.urls import path
 from app import views
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 
 urlpatterns = [
-    path('', views.category_list, name='category_list'),
+    path('category', views.category_list, name='category_list'),
     path('category/create/', views.category_create, name='category_create'),
     path('categories/update/<int:pk>/', views.category_update, name='category_update'),
     path('categories/delete/<int:pk>/', views.category_delete, name='category_delete'),
@@ -35,8 +37,14 @@ urlpatterns = [
     path('fetch-subcategories/', views.fetch_subcategories, name='fetch_subcategories'),
     path('fetch_childcategories/',views.fetch_childcategories,name='fetch_childcategories'),
     path('toggle_product_status/', views.toggle_product_status, name='toggle_product_status'),
+    
+    path('', views.register1, name='register'),
+    path('register/api/', views.register, name='register'),
+    path('login/', views.login, name='login'),
+    path('protected/', views.protected_view, name='protected_view'),
+    
 
-# ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

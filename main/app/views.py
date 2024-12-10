@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Category, Subcategory, ChildCategory, ProductCategory
-from .forms import CategoryForm, SubcategoryForm, ChildCategoryForm, ProductCategoryForm
+from .forms import CategoryForm, SubcategoryForm, ChildCategoryForm, RegisterForm
 from .models import DBdata
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -12,6 +12,11 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .models import ProductCategory
 from .serializers import ProductCategorySerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import RegisterSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 
 
@@ -103,6 +108,26 @@ def product_list(request):
     productcategories = ProductCategory.objects.select_related('category', 'subcategory', 'childcategory')
     return render(request, 'product_list.html', {'productcategories': productcategories})
 
+
+def register1(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            # Create the new user
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+
+            # Show a success message and redirect
+            messages.success(request, "Your account has been created successfully!")
+            return redirect('login')  # Redirect to login page after successful registration
+        else:
+            # If the form is invalid, show the errors
+            messages.error(request, "There was an error with your registration. Please try again.")
+    else:
+        form = RegisterForm()
+
+    return render(request, 'register.html', {'form': form})
 # def product_create(request):
 
 #     if request.method == 'POST':
@@ -213,6 +238,52 @@ def toggle_product_status(request):
         return JsonResponse({'success': True, 'new_status': new_status})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+@api_view(['POST'])
+def register(request):
+    if request.method == 'POST':
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({
+                'message': 'User registered successfully',
+                'user': serializer.data
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Login View using JWT tokens
+@api_view(['POST'])
+def login(request):
+    if request.method == 'POST':
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(username=username, password=password)
+        if user:
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+
+            return Response({
+                'access': access_token,
+                'refresh': refresh_token
+            }, status=status.HTTP_200_OK)
+
+        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+# Protected View requiring authentication
+@api_view(['GET'])
+def protected_view(request):
+    # Only accessible if the user is authenticated
+    return Response({"message": "This is a protected view"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  # Only authenticated users can access
+def protected_view(request):
+    return Response({"message": "This is a protected view"}, status=status.HTTP_200_OK)
 
 
 

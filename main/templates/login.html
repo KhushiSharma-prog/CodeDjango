@@ -12,40 +12,71 @@
     <section class="mainscreen"
         style="background-image: url(/static/images/bg2.jpg);height: 600px;background-repeat: no-repeat; background-size: cover;">
         <div class="container">
-
             <div class="heading">
                 <h3>Login</h3>
             </div>
-
-            <form action="" method="POST">
-                {% csrf_token %}
+            <form id="login-form">
                 <div class="inputs">
-                    <input type="text" name="email" placeholder="Email ID">
-                    <input type="text" name="password" placeholder="Password">
-                </div>
-
-                <div class="links">
-                    <div style="display: flex; gap: 5px;"><input type="checkbox">
-                        <p> Remember me</p></input>
-                    </div>
-                    <a href="#">Forget Password?</a>
+                    <input type="text" id="username" name="username" placeholder="Username" required>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
                 </div>
 
                 <div class="buttons">
-                    <button>Login</button>
+                    <button type="submit">Login</button>
                 </div>
             </form>
-            <div class="pera">
-                <p style="color: wheat;">Don't have an account? <a style="color: white;" href="#"> Register</a></p>
-            </div>
 
+            <div class="pera">
+                <p>Don't have an account? <a href="/register.html">Register</a></p>
+            </div>
+             
             {% if messages %}
             {% for message in messages %}
             <p style="color: rgb(245, 191, 14);">{{ message }}</p>
             {% endfor %}
             {% endif %}
+
+
+            <p id="error-message" style="color: red; display: none;">Invalid credentials. Please try again.</p>
         </div>
     </section>
+
+    <script>
+        // Handle form submission
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Send a POST request to the Django login API endpoint
+            fetch('http://127.0.0.1:8000/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access && data.refresh) {
+                    // Save the JWT tokens to localStorage or cookies
+                    localStorage.setItem('access_token', data.access);
+                    localStorage.setItem('refresh_token', data.refresh);
+
+                    // Redirect to a protected page or dashboard
+                    window.location.href = '/category_list.html';
+                } else {
+                    // Show an error message if the login failed
+                    document.getElementById('error-message').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('error-message').style.display = 'block';
+            });
+        });
+    </script>
 </body>
 
 </html>
